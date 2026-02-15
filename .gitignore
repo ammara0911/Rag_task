@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Logs
+*.log
+debug_manual.log
+
+# Data
+faiss_index/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -12,20 +12,21 @@ st.title("🤖 RAG Chatbot")
 # Sidebar - File Upload
 with st.sidebar:
     st.header("Document Upload")
-    uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+    uploaded_files = st.file_uploader("Upload PDFs", type="pdf", accept_multiple_files=True)
     
-    if uploaded_file is not None:
-        if st.button("Process Document"):
-            with st.spinner("Processing..."):
-                files = {"file": (uploaded_file.name, uploaded_file, "application/pdf")}
-                try:
-                    response = requests.post(f"{API_URL}/upload", files=files)
-                    if response.status_code == 200:
-                        st.success(f"Success! {response.json()['message']}")
-                    else:
-                        st.error(f"Error: {response.json()['detail']}")
-                except Exception as e:
-                    st.error(f"Connection failed: {e}")
+    if uploaded_files:
+        if st.button("Process Documents"):
+            for uploaded_file in uploaded_files:
+                with st.spinner(f"Processing {uploaded_file.name}..."):
+                    files = {"file": (uploaded_file.name, uploaded_file, "application/pdf")}
+                    try:
+                        response = requests.post(f"{API_URL}/upload", files=files)
+                        if response.status_code == 200:
+                            st.success(f"Processed: {uploaded_file.name}")
+                        else:
+                            st.error(f"Error processing {uploaded_file.name}: {response.json()['detail']}")
+                    except Exception as e:
+                        st.error(f"Connection failed for {uploaded_file.name}: {e}")
 
 # Main Chat Interface
 if "messages" not in st.session_state:
@@ -51,9 +52,16 @@ if prompt := st.chat_input("Ask a question about your documents..."):
                 response = requests.post(f"{API_URL}/chat", json=payload)
                 
                 if response.status_code == 200:
-                    answer = response.json()["answer"]
-                    st.markdown(answer)
-                    st.session_state.messages.append({"role": "assistant", "content": answer})
+                    data = response.json()
+                    answer = data["answer"]
+                    sources = data.get("sources", [])
+                    
+                    full_response = answer
+                    if sources:
+                        full_response += f"\n\n**Sources:** {', '.join(sources)}"
+                    
+                    st.markdown(full_response)
+                    st.session_state.messages.append({"role": "assistant", "content": full_response})
                 else:
                     error_msg = f"Error: {response.json().get('detail', 'Unknown error')}"
                     st.error(error_msg)

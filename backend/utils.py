@@ -5,27 +5,24 @@ from langchain_community.document_loaders import PyPDFLoader
 
 def process_pdf(file_path: str):
     """
-    Process a PDF file and return its text content and page count.
+    Process a PDF file and return its document objects and page count.
     
     Args:
         file_path (str): Path to the PDF file.
         
     Returns:
-        dict: A dictionary containing 'text' (str) and 'num_pages' (int).
+        dict: A dictionary containing 'documents' (list) and 'num_pages' (int).
     """
     loader = PyPDFLoader(file_path)
-    pages = loader.load()
+    documents = loader.load()
     
-    text = ""
-    for page in pages:
-        text += page.page_content + "\n"
-        
-    # Basic cleaning
-    cleaned_text = text.replace("\x00", "") 
+    # Null characters can cause issues in vector stores/LLMs
+    for doc in documents:
+        doc.page_content = doc.page_content.replace("\x00", "")
     
     return {
-        "text": cleaned_text,
-        "num_pages": len(pages)
+        "documents": documents,
+        "num_pages": len(documents)
     }
 
 def save_upload_file_temp(upload_file) -> str:

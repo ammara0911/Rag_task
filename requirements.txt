@@ -3,7 +3,8 @@ uvicorn
 python-multipart
 streamlit
 langchain
-langchain-openai
+langchain-community
+langchain-google-genai
 faiss-cpu
 pypdf
 python-dotenv

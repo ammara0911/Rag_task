@@ -6,7 +6,7 @@ try:
     import faiss
     import pypdf
     import dotenv
-    import langchain_openai
+    import langchain_google_genai
     print("Imports successful")
 except ImportError as e:
     print(f"Import failed: {e}")
