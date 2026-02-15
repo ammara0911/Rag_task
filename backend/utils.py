@@ -3,6 +3,9 @@ import shutil
 import tempfile
 from langchain_community.document_loaders import PyPDFLoader
 
+
+
+# Extracts and returns cleaned text page documents from a PDF file along with the total page count, preparing it for embedding and indexing.
 def process_pdf(file_path: str):
     """
     Process a PDF file and return its document objects and page count.
@@ -25,6 +28,9 @@ def process_pdf(file_path: str):
         "num_pages": len(documents)
     }
 
+
+
+# Saves an uploaded file to a named temporary file on disk and returns its path for further processing by loaders like the PDF extractor.
 def save_upload_file_temp(upload_file) -> str:
     """
     Save an uploaded file to a temporary file and return the path.
