@@ -1,4 +1,4 @@
-# 🤖 RAG Chatbot with Context Awareness
+# RAG Chatbot with Context Awareness
 
 A powerful Retrieval-Augmented Generation (RAG) chatbot that allows you to **chat with your PDF documents**. It features **context-aware conversations**, meaning it remembers what you asked previously to understand follow-up questions (e.g., "Describe its theme" after asking about a specific topic).
 
@@ -6,17 +6,17 @@ Built with **FastAPI**, **LangChain**, **Google Gemini**, and **Streamlit**. Ful
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
-*   **🧠 Context-Aware Memory**: The bot understands conversation history. If you ask "Who is the CEO?", and then "How old is he?", it knows "he" refers to the CEO.
-*   **📚 Multi-Document Support**: Upload multiple PDF files to build a comprehensive knowledge base.
-*   **🔍 Accurate Citations**: Every response includes the source filename so you know exactly where the information came from.
-*   **⚡ Powered by Gemini**: Uses Google's latest `gemini-flash-latest` model for fast and high-quality responses.
-*   **🐳 Dockerized**: Run the entire stack (Frontend + Backend) with a single command.
+*   ** Context-Aware Memory**: The bot understands conversation history. If you ask "Who is the CEO?", and then "How old is he?", it knows "he" refers to the CEO.
+*   ** Multi-Document Support**: Upload multiple PDF files to build a comprehensive knowledge base.
+*   ** Accurate Citations**: Every response includes the source filename so you know exactly where the information came from.
+*   ** Powered by Gemini**: Uses Google's latest `gemini-flash-latest` model for fast and high-quality responses.
+*   ** Dockerized**: Run the entire stack (Frontend + Backend) with a single command.
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 *   **Backend**: FastAPI (Python)
 *   **Frontend**: Streamlit
@@ -27,7 +27,7 @@ Built with **FastAPI**, **LangChain**, **Google Gemini**, and **Streamlit**. Ful
 
 ---
 
-## 🏁 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -139,7 +139,7 @@ curl -X POST "http://localhost:8000/chat" \
 
 ---
 
-## 🏗️ Architecture Flow
+##  Architecture Flow
 
 1.  **Ingestion**: User uploads a PDF.
 2.  **Processing**: The system splits the text into chunks (1000 characters).
@@ -153,7 +153,7 @@ curl -X POST "http://localhost:8000/chat" \
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 Rag_task/
