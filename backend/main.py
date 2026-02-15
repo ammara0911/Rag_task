@@ -6,8 +6,11 @@ import shutil
 from backend.utils import process_pdf, save_upload_file_temp
 from backend.rag_service import RAGService
 
+# Initialize the API app & Services
 app = FastAPI()
 rag_service = RAGService()
+
+
 
 @app.get("/")
 async def root():
@@ -20,11 +23,16 @@ class QueryRequest(BaseModel):
 # Simple in-memory history storage
 chat_histories = {}
 
+
+
+# File Upload Endpoint 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     """
     Upload a PDF file, extract content, and add to vector store.
     """
+
+    # Validate that only PDF is accepted
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
     
@@ -48,6 +56,8 @@ async def upload_file(file: UploadFile = File(...)):
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
 
+
+# Chat Query Endpoint
 @app.post("/chat")
 async def chat(request: QueryRequest):
     """
@@ -72,8 +82,10 @@ async def chat(request: QueryRequest):
         # Handle case where knowledge base is empty
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        # Catch any other internal errors
         raise HTTPException(status_code=500, detail=f"Error generating answer: {str(e)}")
 
+# Run server when called directly
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
