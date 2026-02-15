@@ -1,104 +1,170 @@
-# RAG Chatbot Application
+# 🤖 RAG Chatbot with Context Awareness
 
-## Project Overview
-This is a Retrieval-Augmented Generation (RAG) Chatbot application built as a take-home assignment for an AI/ML Engineer role. It allows users to upload **multiple PDF documents**, processes them to extract text, indexes the content using FAISS, and enables users to chat with the documents using **Google's Gemini models**.
+A powerful Retrieval-Augmented Generation (RAG) chatbot that allows you to **chat with your PDF documents**. It features **context-aware conversations**, meaning it remembers what you asked previously to understand follow-up questions (e.g., "Describe its theme" after asking about a specific topic).
 
-## Features
-- **Multi-Document Ingestion**: Upload multiple PDF files via a simple UI.
-- **Source Attribution**: The chatbot cites specific filenames for every answer.
-- **RAG Architecture**: Uses LangChain and FAISS for efficient document retrieval.
-- **Context-Aware Chat**: Remembers previous questions in a session to handle follow-ups (e.g., "Describe its theme").
-- **Interactive Chat**: Chat interface powered by `gemini-flash-latest`.
-- **Containerized**: Fully Dockerized for easy deployment.
+Built with **FastAPI**, **LangChain**, **Google Gemini**, and **Streamlit**. Fully Dockerized for easy deployment.
 
-## Tech Stack
-- **Backend**: FastAPI
-- **Frontend**: Streamlit
-- **AI/ML**: LangChain, Gemini (Google Generative AI), FAISS
-- **Containerization**: Docker, Docker Compose
+---
 
-## Setup Instructions
+## 🚀 Key Features
+
+*   **🧠 Context-Aware Memory**: The bot understands conversation history. If you ask "Who is the CEO?", and then "How old is he?", it knows "he" refers to the CEO.
+*   **📚 Multi-Document Support**: Upload multiple PDF files to build a comprehensive knowledge base.
+*   **🔍 Accurate Citations**: Every response includes the source filename so you know exactly where the information came from.
+*   **⚡ Powered by Gemini**: Uses Google's latest `gemini-flash-latest` model for fast and high-quality responses.
+*   **🐳 Dockerized**: Run the entire stack (Frontend + Backend) with a single command.
+
+---
+
+## 🛠️ Tech Stack
+
+*   **Backend**: FastAPI (Python)
+*   **Frontend**: Streamlit
+*   **AI Orchestration**: LangChain
+*   **Vector Store**: FAISS (Facebook AI Similarity Search)
+*   **LLM**: Google Gemini (`gemini-flash-latest`)
+*   **Embeddings**: Google Generative AI Embeddings (`models/gemini-embedding-001`)
+
+---
+
+## 🏁 Getting Started
 
 ### Prerequisites
-- Python 3.9+
-- Docker & Docker Compose
-- Google Gemini API Key
 
-### Local Installation
+*   **Docker Desktop** installed and running.
+*   A **Google Gemini API Key** (Get it [here](https://aistudio.google.com/app/apikey)).
+
+### Option 1: Run with Docker (Recommended)
+
+This is the easiest way to run the application.
+
 1.  **Clone the repository**:
     ```bash
-    git clone <repository_url>
-    cd <project_directory>
+    git clone https://github.com/ammara0911/Rag_task.git
+    cd Rag_task
     ```
 
-2.  **Environment Setup**:
-    Copy `.env.example` to `.env` and add your Google API Key:
+2.  **Set up Environment Variables**:
+    Create a `.env` file in the root directory and add your API Key:
     ```bash
-    cp .env.example .env
-    # Edit .env and set GOOGLE_API_KEY
+    GOOGLE_API_KEY=your_actual_api_key_here
     ```
 
-3.  **Install Dependencies**:
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-    pip install -r requirements.txt
-    ```
-
-4.  **Run Locally**:
-    - Backend: `uvicorn backend.main:app --reload`
-    - Frontend: `streamlit run frontend/app.py`
-
-## Docker Instructions
-To run the entire application using Docker:
-
-1.  Ensure Docker Desktop is running.
-2.  Build and run the containers:
+3.  **Build and Run**:
     ```bash
     docker-compose up --build
     ```
-3.  Access the application:
-    - **User Interface (Frontend)**: [http://localhost:8501](http://localhost:8501) <- **Use this to chat!**
-    - **API Backend**: [http://localhost:8000](http://localhost:8000) (Now shows a welcome message)
-    - **Interactive API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-## API Documentation
+4.  **Access the App**:
+    *   **Frontend (Chat Interface)**: [http://localhost:8501](http://localhost:8501)
+    *   **Backend API**: [http://localhost:8000](http://localhost:8000)
+    *   **API Documentation (Swagger UI)**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### `POST /upload`
-Uploads a PDF file and adds it to the knowledge base.
-- **Body**: `multipart/form-data` with `file` field.
-- **Response**:
-  ```json
-  {
-    "filename": "document.pdf",
-    "num_pages": 10,
-    "message": "File processed and added to knowledge base successfully."
-  }
-  ```
+---
 
-### `POST /chat`
-Asks a question based on the uploaded documents.
-- **Body**: JSON
-  ```json
-  {
-    "query": "What is the main topic of the document?",
-    "session_id": "optional-session-id"
-  }
-  ```
-- **Response**:
-  ```json
-  {
-    "answer": "The document discusses...",
-    "sources": ["document.pdf"]
-  }
-  ```
+### Option 2: Run Locally (For Development)
 
-## Architecture
-1.  **Text Extraction**: `PyPDFLoader` is used to load PDFs as `Document` objects, preserving metadata.
-2.  **Chunking**: `RecursiveCharacterTextSplitter` breaks text into smaller chunks (1000 chars) for efficient embedding.
-3.  **Embeddings**: `GoogleGenerativeAIEmbeddings` (`models/gemini-embedding-001`) transforms text chunks into vector representations.
-4.  **Vector Store**: `FAISS` indexes these vectors for fast similarity search.
-5.  **Retrieval & Generation**:
-    - The query is embedded.
-    - Relevant text chunks are retrieved from FAISS.
-    - `ChatGoogleGenerativeAI` (`gemini-1.5-flash`) generates an answer citing the sources.
+If you prefer running without Docker:
+
+1.  **Create a Virtual Environment**:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+    ```
+
+2.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Run the Backend**:
+    ```bash
+    uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+    ```
+
+4.  **Run the Frontend**:
+    Open a new terminal, activate the venv, and run:
+    ```bash
+    streamlit run frontend/app.py
+    ```
+
+---
+
+## 📖 API Documentation
+
+The backend provides RESTful endpoints to interact with the system programmatically.
+
+### 1. Upload Document
+**Endpoint**: `POST /upload`  
+**Description**: Uploads a PDF file, processes it, and indexes it into the vector store.
+
+**Curl Example**:
+```bash
+curl -X POST "http://localhost:8000/upload" \
+     -H "accept: application/json" \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@/path/to/your/document.pdf"
+```
+
+**Response**:
+```json
+{
+  "filename": "document.pdf",
+  "num_pages": 15,
+  "message": "File processed and added to knowledge base successfully."
+}
+```
+
+### 2. Chat with Context
+**Endpoint**: `POST /chat`  
+**Description**: Ask questions about the uploaded documents. Supports `session_id` to maintain conversation history.
+
+**Curl Example**:
+```bash
+curl -X POST "http://localhost:8000/chat" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "query": "What is the main conclusion?",
+           "session_id": "user-session-123"
+         }'
+```
+
+**Response**:
+```json
+{
+  "answer": "The main conclusion of the document is...",
+  "sources": ["document.pdf"]
+}
+```
+
+---
+
+## 🏗️ Architecture Flow
+
+1.  **Ingestion**: User uploads a PDF.
+2.  **Processing**: The system splits the text into chunks (1000 characters).
+3.  **Embedding**: Chunks are converted into vectors using `gemini-embedding-001`.
+4.  **Storage**: Vectors are stored in a local FAISS index.
+5.  **Retrieval**:
+    *   When a user asks a question, the system first checks the **chat history**.
+    *   It reformulates the question to be standalone (e.g., "Describe its theme" -> "Describe the theme of Codex").
+    *   It searches FAISS for the most relevant text chunks.
+6.  **Generation**: The LLM (`gemini-flash-latest`) generates an answer using the retrieved chunks + the chat history.
+
+---
+
+## 📂 Project Structure
+
+```
+Rag_task/
+├── backend/
+│   ├── main.py          # FastAPI application & endpoints
+│   ├── rag_service.py   # Core logic for RAG and LangChain
+│   └── utils.py         # PDF processing utilities
+├── frontend/
+│   └── app.py           # Streamlit UI
+├── Dockerfile           # Docker configuration
+├── docker-compose.yml   # Container orchestration
+├── requirements.txt     # Python dependencies
+└── README.md            # Documentation
+```
